@@ -1,0 +1,3 @@
+create environemt - python -m venv env_quiz
+activate environment - env_quiz\Scripts\activate
+django-admin startproject quiz_complete

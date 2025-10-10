@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign Up as Author</title>
+  <link rel="stylesheet" href="{% static 'home/css/bootstrap.min.css' %}">
+</head>
+<body>
+  <div class="container mt-5">
+    <h2 class="mb-4 text-primary">Sign Up as Author</h2>
+    <form method="post" action="{% url 'author_signup' %}">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label>User Name:</label>
+        <input type="text" class="form-control" name="user_name" required>
+      </div>
+      <div class="mb-3">
+        <label>Password:</label>
+        <input type="password" class="form-control" name="user_password" required>
+      </div>
+      <div class="mb-3">
+        <label>Email:</label>
+        <input type="email" class="form-control" name="user_email" required>
+      </div>
+      
+      <button type="submit" class="btn btn-primary">Sign Up</button>
+    </form>
+  </div>
+
+<!-- Registration Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center">
+      <div class="modal-body">
+        <svg width="70" height="70" fill="none" stroke="#43d477" stroke-width="3">
+          <circle cx="35" cy="35" r="33" stroke="#e5f8ee" />
+          <path d="M20 36l10 10 20-20" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <h2 class="mt-4">Registration Successful</h2>
+        <p class="mb-4">You have successfully registered as an Author!</p>
+        <a href="{% url 'home' %}" class="btn btn-success">Home</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Error Modal -->
+<div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center">
+      <div class="modal-body">
+        <svg width="70" height="70" fill="none" stroke="#f44336" stroke-width="3">
+          <circle cx="35" cy="35" r="33" stroke="#ffebee" />
+          <path d="M25 25l20 20M45 25L25 45" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <h2 class="mt-4 text-danger">Registration Failed</h2>
+        <p class="mb-4" id="errorMessage">An error occurred.</p>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="tryAgain()">Try Again</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<script>
+  window.onload = function () {
+    const urlParams = new URLSearchParams(window.location.search);
+
+    if (urlParams.get('success') === '1') {
+      const modal = new bootstrap.Modal(document.getElementById('successModal'));
+      modal.show();
+    }
+
+    if (urlParams.get('error')) {
+      const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+      const errorMsg = document.getElementById('errorMessage');
+      const error = urlParams.get('error');
+    
+      if (error === 'already_exists') {
+        errorMsg.textContent = 'Author already exists.';
+      }
+      else if (error === 'username_taken') {
+        errorMsg.textContent = 'This username is already taken.';
+      } else if (error === 'email_taken') {
+        errorMsg.textContent = 'This email is already registered.';
+      } else {
+        errorMsg.textContent = 'Registration failed. Please try again.';
+      }
+
+      errorModal.show();
+    }
+  };
+
+// ✅ Function to clean URL and refresh page
+  function tryAgain() {
+    window.location.href = "{% url 'author_signup' %}";
+  }
+
+</script>
+
+<script src="{% static 'home/js/bootstrap.bundle.min.js' %}"></script>
+
+</body>
+</html>

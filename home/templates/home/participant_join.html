@@ -1,0 +1,295 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up as Author - QuizCompete</title>
+  <link rel="stylesheet" href="{% static 'home/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> <!-- For icons -->
+  <style>
+    /* Custom blue theme enhancements (matching sign-in page) */
+    :root {
+      --primary-blue: #0d6efd; /* Bootstrap primary blue */
+      --light-blue: #e7f3ff;
+      --dark-blue: #0a58ca;
+      --success-green: #198754;
+    }
+    body {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .navbar {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .navbar-brand {
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+    .navbar-brand:hover {
+      color: var(--primary-blue) !important;
+    }
+    .signup-card {
+      border: none;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      border-radius: 15px;
+      overflow: hidden;
+      background: white;
+      max-width: 400px;
+      margin: auto;
+    }
+    .signup-card .card-body {
+      padding: 2.5rem;
+    }
+    .form-floating {
+      margin-bottom: 1.5rem;
+    }
+    .form-control {
+      border-radius: 10px;
+      border: 2px solid #e9ecef;
+      padding: 0.75rem 1rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .form-control:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+    .btn-primary {
+      background-color: var(--primary-blue);
+      border-color: var(--primary-blue);
+      border-radius: 10px;
+      padding: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .btn-primary:hover {
+      background-color: var(--dark-blue);
+      border-color: var(--dark-blue);
+      transform: translateY(-1px);
+    }
+    .btn-success {
+      background-color: var(--success-green);
+      border-color: var(--success-green);
+      border-radius: 10px;
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+    .btn-success:hover {
+      background-color: #146c43;
+      border-color: #146c43;
+    }
+    .section-title {
+      color: var(--primary-blue);
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .section-title i {
+      color: var(--primary-blue);
+      margin-right: 0.5rem;
+    }
+    .links {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+    .links a {
+      color: var(--primary-blue);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    .links a:hover {
+      color: var(--dark-blue);
+      text-decoration: underline;
+    }
+    .footer {
+      margin-top: auto;
+      padding-top: 2rem;
+    }
+    /* Modal Enhancements */
+    .modal-content {
+      border-radius: 15px;
+      border: none;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    .modal-header {
+      border-bottom: none;
+      justify-content: center;
+    }
+    .modal-body {
+      padding: 2rem;
+      text-align: center;
+    }
+    .modal-body svg {
+      margin-bottom: 1rem;
+    }
+    .modal-body h2 {
+      color: var(--primary-blue);
+      font-weight: 700;
+    }
+    .modal-body .text-danger {
+      color: #dc3545 !important;
+    }
+    .modal-body p {
+      color: #6c757d;
+    }
+  </style>
+</head>
+<body>
+
+     <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white px-4">
+    <div class="container-fluid">
+      <a class="navbar-brand fs-3" href="{% url 'home' %}">
+        <i class="fas fa-graduation-cap me-2 text-primary"></i>Quiz<span class="text-primary">Compete</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 fs-5">
+          <!-- Optional links -->
+          <!-- <li class="nav-item"><a class="nav-link" href="{% url 'home' %}"><i class="fas fa-home me-1"></i>Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'authors' %}"><i class="fas fa-users me-1"></i>Authors</a></li> -->
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Sign Up Section -->
+  <main class="container py-5 flex-grow-1">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="signup-card">
+          <div class="card-body">
+            <h2 class="section-title">
+              <i class="fas fa-user-plus"></i>Join as Participant
+            </h2>
+            
+            <!-- Sign Up Form -->
+            <form method="post" action="{% url 'participant_join' %}">
+              {% csrf_token %}
+              
+              <!-- Username Field -->
+              <div class="form-floating">
+                <input type="text" class="form-control" id="floatingUsername" name="user_name" placeholder="Username" required>
+                <label for="floatingUsername">
+                  <i class="fas fa-user me-2"></i>Username
+                </label>
+              </div>
+
+     <!-- Email Field -->
+              <div class="form-floating">
+                <input type="email" class="form-control" id="floatingEmail" name="user_email" placeholder="Email" required>
+                <label for="floatingEmail">
+                  <i class="fas fa-envelope me-2"></i>Email
+                </label>
+              </div>
+              
+              <!-- Password Field -->
+              <div class="form-floating" style="position: relative;">
+                <input type="password" class="form-control" id="floatingPassword" name="user_password" placeholder="Password" required>
+                <label for="floatingPassword">
+                  <i class="fas fa-lock me-2"></i>Password
+                </label>
+              </div>
+              
+              <!-- Submit Button -->
+              <button type="submit" class="btn btn-primary w-100 mb-3">
+                <i class="fas fa-user-plus me-2"></i>Sign Up
+              </button>
+ <!-- Links -->
+              <div class="links">
+                <p class="mb-2">Already have an account? <a href="{% url 'sign_in' %}">Sign In</a></p>  <!-- Replace 'login' with your sign-in URL -->
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!-- Registration Success Modal (Enhanced) -->
+  <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+          <i class="fas fa-check-circle fa-3x text-success mb-3"></i>  <!-- Replaced SVG with Font Awesome for consistency -->
+          <h2 class="mt-2">Registration Successful</h2>
+          <p class="mb-4">You have successfully registered as an Author!</p>
+          <a href="{% url 'home' %}" class="btn btn-success">Go to Home</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Error Modal (Enhanced) -->
+  <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+          <i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i>  <!-- Replaced SVG with Font Awesome -->
+          <h2 class="mt-2 text-danger">Registration Failed</h2>
+          <p class="mb-4" id="errorMessage">An error occurred.</p>
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="tryAgain()">Try Again</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="{% static 'home/js/bootstrap.bundle.min.js' %}"></script>
+  <script>
+    // Existing modal handling script
+    window.onload = function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('success') === '1') {
+        const modal = new bootstrap.Modal(document.getElementById('successModal'));
+        modal.show();
+      }
+      if (urlParams.get('error')) {
+        const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+        const errorMsg = document.getElementById('errorMessage');
+        const error = urlParams.get('error');
+      
+        if (error === 'already_exists') {
+          errorMsg.textContent = 'Author already exists.';
+        }
+        else if (error === 'username_taken') {
+          errorMsg.textContent = 'This username is already taken.';
+        } else if (error === 'email_taken') {
+          errorMsg.textContent = 'This email is already registered.';
+        } else {
+          errorMsg.textContent = 'Registration failed. Please try again.';
+        }
+        errorModal.show();
+      }
+    };
+    // Function to clean URL and refresh page
+    function tryAgain() {
+      window.location.href = "{% url 'participant_join' %}";
+    }
+ // Password visibility toggle (matching sign-in page)
+    document.addEventListener('DOMContentLoaded', function() {
+      const passwordField = document.getElementById('floatingPassword');
+      if (passwordField) {
+        const toggleIcon = document.createElement('i');
+        toggleIcon.className = 'fas fa-eye position-absolute end-0 pe-3 top-50 translate-middle-y text-muted';
+        toggleIcon.style.cursor = 'pointer';
+        toggleIcon.style.zIndex = '10';
+        passwordField.parentNode.style.position = 'relative';
+        passwordField.parentNode.appendChild(toggleIcon);
+        let isPasswordVisible = false;
+        toggleIcon.addEventListener('click', function() {
+          isPasswordVisible = !isPasswordVisible;
+          passwordField.type = isPasswordVisible ? 'text' : 'password';
+          toggleIcon.className = isPasswordVisible ? 'fas fa-eye-slash' : 'fas fa-eye';
+        });
+      }
+    });
+  </script>
+</body>
+</html>

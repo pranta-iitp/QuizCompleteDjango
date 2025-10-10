@@ -1,0 +1,567 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Author Dashboard - QuizCompete</title>
+  <link rel="stylesheet" href="{% static 'home/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> <!-- For icons -->
+  <style>
+    /* Custom blue theme enhancements (consistent with previous pages) */
+    :root {
+      --primary-blue: #0d6efd; /* Bootstrap primary blue */
+      --light-blue: #e7f3ff;
+      --dark-blue: #0a58ca;
+      --success-green: #198754;
+      --warning-orange: #fd7e14;
+      --info-light: #0dcaf0;
+    }
+    body {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .navbar-brand {
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+    .navbar-brand:hover {
+      color: var(--primary-blue) !important;
+    }
+    .dashboard-card {
+      border: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border-radius: 15px;
+      overflow: hidden;
+      background: white;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .dashboard-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+    .card-body {
+      padding: 2rem;
+    }
+
+    .stat-card {
+      text-align: center;
+      background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+      color: white;
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .stat-card i {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .stat-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+        .section-title {
+      color: var(--primary-blue);
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+    }
+    .section-title i {
+      margin-right: 0.5rem;
+    }
+    .btn-primary {
+      background-color: var(--primary-blue);
+      border-color: var(--primary-blue);
+      border-radius: 10px;
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .btn-primary:hover {
+      background-color: var(--dark-blue);
+      border-color: var(--dark-blue);
+      transform: translateY(-1px);
+    }
+     .btn-outline-primary {
+      border-radius: 10px;
+      padding: 0.75rem 1.5rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    .btn-outline-primary:hover {
+      background-color: var(--primary-blue);
+      color: white;
+      transform: translateY(-1px);
+    }
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .action-card {
+      text-align: center;
+      padding: 1.5rem;
+      border: 2px solid #e9ecef;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      background: white;
+    }
+     .action-card:hover {
+      border-color: var(--primary-blue);
+      box-shadow: 0 4px 8px rgba(13, 110, 253, 0.2);
+    }
+    .action-card i {
+      font-size: 2rem;
+      color: var(--primary-blue);
+      margin-bottom: 0.5rem;
+    }
+    .recent-quiz {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      border: 1px solid #dee2e6;
+      border-radius: 10px;
+      margin-bottom: 0.5rem;
+      background: #f8f9fa;
+      transition: background-color 0.3s ease;
+    }
+    .recent-quiz:hover {
+      background-color: var(--light-blue);
+    }
+    .footer {
+      margin-top: auto;
+      padding-top: 2rem;
+    }
+    .welcome-section {
+      background: linear-gradient(135deg, var(--light-blue) 0%, white 100%);
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    .welcome-section h1 {
+      color: var(--primary-blue);
+      font-weight: 700;
+    }
+
+/* Modal-Specific Styles (Blue Theme) */
+  
+  .modal-backdrop {
+    z-index: 1040;  /* Ensure it's on top */
+  }
+    .modal-content {
+      border-radius: 15px;
+      border: none;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    .modal-header {
+      background: linear-gradient(135deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+      color: white;
+      border-radius: 15px 15px 0 0;
+      border-bottom: none;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .modal-header .btn-close {
+      filter: invert(1); /* White close button */
+    }
+    .modal-title {
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      margin: 0;
+    }
+
+    .modal-title i {
+      margin-right: 0.5rem;
+    }
+    .modal-body {
+      padding: 2rem;
+    }
+    .form-floating {
+      margin-bottom: 1.5rem;
+    }
+    .form-control, .form-control[readonly] {
+      border-radius: 10px;
+      border: 2px solid #e9ecef;
+      padding: 0.75rem 1rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      background-color: #f8f9fa; /* Light bg for read-only */
+    }
+    .form-control:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+    .form-control[readonly] {
+      background-color: #e9ecef;
+      color: #6c757d;
+      cursor: not-allowed;
+    }
+
+    .form-control[readonly]:focus {
+      box-shadow: none;
+      border-color: #dee2e6;
+    }
+    .btn-primary.modal-btn {
+      background-color: var(--primary-blue);
+      border-color: var(--primary-blue);
+      border-radius: 10px;
+      padding: 0.75rem 2rem;
+      font-weight: 600;
+      width: 100%;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .btn-primary.modal-btn:hover {
+      background-color: var(--dark-blue);
+      border-color: var(--dark-blue);
+      transform: translateY(-1px);
+    }
+    .readonly-label {
+      font-weight: 600;
+      color: var(--primary-blue);
+    }
+    .subjects-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    @media (max-width: 768px) {
+      .subjects-group {
+        grid-template-columns: 1fr;
+      }
+    }
+
+  </style>
+</head>
+<body>
+    <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white px-4">
+    <div class="container-fluid">
+      <a class="navbar-brand fs-3" href="">
+        <i class="fas fa-graduation-cap me-2 text-primary"></i>Quiz<span class="text-primary">Compete</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 fs-5">
+          <li class="nav-item">
+            <a class="nav-link" href=""><i class="fas fa-home me-1"></i>Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href=""><i class="fas fa-tachometer-alt me-1"></i>Dashboard</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-user me-1"></i>{{ author_name|default:"Author" }}
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href=""><i class="fas fa-cog me-2"></i>Settings</a></li>
+              <li><a class="dropdown-item" href=""><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+         </div>
+    </div>
+  </nav>
+  <!-- Dashboard Main Content -->
+  <main class="container py-5 flex-grow-1">
+    <div class="row justify-content-center">
+      <div class="col-12">
+        
+        <!-- Welcome Section -->
+        <div class="welcome-section dashboard-card">
+          <h1>Welcome back, {{ author_name|default:"Author" }}!</h1>
+          <p class="text-muted mb-0">Here's a quick overview of your author activities. Ready to create more engaging quizzes?</p>
+        </div>
+        <!-- Stats Row -->
+        <div class="row mb-4">
+          <div class="col-md-3 mb-3">
+            <div class="stat-card">
+              <i class="fas fa-clipboard-list"></i>
+              <div class="stat-number">{{ total_quizzes|default:"0" }}</div>
+              <div class="stat-label">Total Quizzes</div>
+            </div>
+          </div>
+         <div class="col-md-3 mb-3">
+            <div class="stat-card">
+              <i class="fas fa-users"></i>
+              <div class="stat-number">{{ total_participants|default:"0" }}</div>
+              <div class="stat-label">Participants</div>
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="stat-card">
+              <i class="fas fa-chart-line"></i>
+              <div class="stat-number">{{ average_rating|default:"0" }}%</div>
+              <div class="stat-label">Avg. Rating</div>
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="stat-card">
+              <i class="fas fa-trophy"></i>
+              <div class="stat-number">{{ total_earnings|default:"$0" }}</div>
+              <div class="stat-label">Earnings</div>
+            </div>
+          </div>
+        </div>
+         <!-- Quick Actions -->
+        <div class="dashboard-card mb-4">
+          <div class="card-body">
+            <h3 class="section-title">
+              <i class="fas fa-bolt"></i>Quick Actions
+            </h3>
+            <div class="quick-actions">
+              <div class="action-card">
+                <i class="fas fa-plus-circle"></i>
+                <h5>Create New Quiz</h5>
+                <p class="text-muted small">Start building your next competition</p>
+                <a href="#" class="btn btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#createQuizModal">Create</a>
+              </div>
+              <div class="action-card">
+                <i class="fas fa-list"></i>
+                <h5>View My Quizzes</h5>
+                <p class="text-muted small">Manage and edit existing quizzes</p>
+                <a href="" class="btn btn-outline-primary mt-2">View All</a>
+              </div>
+              <div class="action-card">
+                <i class="fas fa-chart-bar"></i>
+                <h5>Analytics</h5>
+                <p class="text-muted small">See performance insights</p>
+                <a href="" class="btn btn-outline-primary mt-2">Analyze</a>
+              </div>
+              <div class="action-card">
+                <i class="fas fa-user-edit"></i>
+                <h5>Edit Profile</h5>
+                <p class="text-muted small">Update your subjects and details</p>
+                <a href="#" class="btn btn-outline-primary mt-2" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit</a>
+
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+        <!-- Recent Quizzes -->
+        <div class="dashboard-card">
+          <div class="card-body">
+            <h3 class="section-title">
+              <i class="fas fa-clock"></i>Recent Quizzes
+            </h3>
+            {% if recent_quizzes %}
+              {% for quiz in recent_quizzes %}
+              <div class="recent-quiz">
+                <div>
+                  <strong>{{ quiz.title|default:"Quiz Title" }}</strong>
+                  <br>
+                  <small class="text-muted">{{ quiz.subject|default:"Subject" }} | {{ quiz.created_date|default:"Today" }}</small>
+                </div>
+                <div class="text-end">
+                  <span class="badge bg-primary me-2">{{ quiz.participants|default:"0" }} Participants</span>
+                  <a href="" class="btn btn-sm btn-outline-primary">View</a>
+                </div>
+              </div>
+              {% endfor %}
+            {% else %}
+              <p class="text-center text-muted">No recent quizzes. Create your first one!</p>
+            {% endif %}
+          </div>
+        </div>
+        </div>
+    </div>
+  </main>
+
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="editProfileModalLabel">
+          <i class="fas fa-user-edit me-2"></i>Edit Profile
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Optional: Wrap in form for better structure -->
+        <div id="editProfileForm">
+          {% csrf_token %}  <!-- Django CSRF token -->
+
+          <!-- Read-only fields -->
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="username" value="{{ user_name}}" readonly>
+            <label for="username"><i class="fas fa-user me-2"></i>Username (Read-Only)</label>
+          </div>
+          <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="email" value="{{ author.author_email }}" readonly>
+            <label for="email"><i class="fas fa-envelope me-2"></i>Email Address (Read-Only)</label>
+          </div>
+          <!-- Editable fields (IDs match JS) -->
+          <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="author_name" value="" maxlength="50" required>
+            <label for="author_name"><i class="fas fa-user-tag me-2"></i>Full Name</label>
+          </div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="author_subject_a" value="{{ author.author_subject_a }}" maxlength="50">
+                <label for="author_subject_a"><i class="fas fa-book-open me-2"></i>Subject A</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="author_subject_b" value="{{ author.author_subject_b }}" maxlength="50">
+                <label for="author_subject_b"><i class="fas fa-book-open me-2"></i>Subject B</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="author_subject_c" value="{{ author.author_subject_c }}" maxlength="50">
+                <label for="author_subject_c"><i class="fas fa-book-open me-2"></i>Subject C</label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-floating">
+                <input type="text" class="form-control" id="author_subject_d" value="{{ author.author_subject_d }}" maxlength="50">
+                <label for="author_subject_d"><i class="fas fa-book-open me-2"></i>Subject D</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" id="saveProfileBtn" class="btn btn-primary">Save Changes</button>  <!-- ID matches JS -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for successful profile updation -->
+<div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body text-center">
+          <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+          <h2 class="mt-2" id="successModalTitle">Profile Updated</h2>
+          <p class="mb-4" id="successModalMessage">Your profile has been updated successfully!</p>
+          <button type="button" class="btn btn-success" data-bs-dismiss="modal">Continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<div class="modal fade blue-theme-modal" id="createQuizModal" tabindex="-1" aria-labelledby="createQuizModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="createQuizModalLabel">Create New Quiz</h1>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <!-- General Error Message Space (e.g., for form submission errors) -->
+                <div id="generalError" class="general-error">
+                    <strong>Error:</strong> <span id="errorText">Please check your inputs and try again.</span>
+                </div>
+                <!-- Form for Basic Quiz Details -->
+                <form id="quizForm">
+                    <!-- Quiz Title -->
+                    <div class="mb-3">
+                        <label for="quizTitle" class="form-label">Quiz Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="quizTitle" name="quiz_title" maxlength="100" required placeholder="Enter title/topic of your quiz (max 100 characters)">
+                        <div id="titleError" class="error-message">Title is required and must be under 100 characters.</div>
+                    </div>
+                    <!-- Quiz Subject -->
+                     <div class="mb-3">
+                        <label for="quizSubject" class="form-label">Quiz Subject</label>
+                        <select class="form-select" id="quizSubject" name="quiz_subject">
+                              {% if author.author_subject_a %}
+                                  <option value="{{ author.author_subject_a|escape }}">{{ author.author_subject_a|escape }}</option>
+                              {% endif %}
+                              {% if author.author_subject_c %}
+                                  <option value="{{ author.author_subject_c|escape }}">{{ author.author_subject_c|escape }}</option>
+                              {% endif %}
+                              {% if not author.author_subject_a and not author.author_subject_c %}
+                                  <option value="" class="no-subjects" disabled>No subjects available for this author.</option>
+                              {% endif %}
+                        </select>
+                        <div id="subjectError" class="error-message">Please select a valid subject from your available options.</div>
+                        {% if not author_subjects %}
+                            <small class="text-muted">No subjects configured for this author. Consider updating your profile.</small>
+                        {% endif %}
+                    </div>
+                    <!-- Quiz Description -->
+                    <div class="mb-3">
+                        <label for="quizDescription" class="form-label">Quiz Description</label>
+                        <textarea class="form-control" id="quizDescription" name="quiz_description" rows="4" placeholder="Provide a brief description of the quiz..."></textarea>
+                        <div id="descriptionError" class="error-message">Description cannot exceed 500 characters (or adjust based on TEXT field limits).</div>
+                    </div>
+                    <!-- Note: author_id, created_date, total_questions, total_participants, average_rating are handled server-side or auto-generated -->
+                    <div class="alert alert-info">
+                        <small><strong>Note:</strong> Author, creation date, question count, participants, and rating will be set automatically upon creation.</small>
+                    </div>
+                </form>
+            </div>
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" form="quizForm" class="btn btn-primary">Create Quiz</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- hidden fields -->
+<input type="hidden" id="userId" value="{{ user_id }}">
+<input type="hidden" id="authorId" value="{{ author_id }}">
+
+
+  <script src="{% static 'home/js/edit_profile_author.js' %}"></script>
+
+   <script src="{% static 'home/js/bootstrap.bundle.min.js' %}"></script>
+  <script>
+    // Optional: Add tooltips or simple animations
+    document.addEventListener('DOMContentLoaded', function() {
+      // Enable Bootstrap tooltips if needed (e.g., on stats)
+      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+      });
+      // Simple animation for stat cards on load
+      const statCards = document.querySelectorAll('.stat-card');
+      statCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          card.style.transition = 'all 0.6s ease';
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, index * 200);
+      });
+    });
+  </script>
+</body>
+</html>
