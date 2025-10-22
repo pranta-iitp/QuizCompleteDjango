@@ -492,24 +492,14 @@
                         <input type="text" class="form-control" id="quizTitle" name="quiz_title" maxlength="100" required placeholder="Enter title/topic of your quiz (max 100 characters)">
                         <div id="titleError" class="error-message">Title is required and must be under 100 characters.</div>
                     </div>
-                    <!-- Quiz Subject -->
+                    <!-- Quiz Subject will be populated by Javascript -->
                      <div class="mb-3">
                         <label for="quizSubject" class="form-label">Quiz Subject</label>
                         <select class="form-select" id="quizSubject" name="quiz_subject">
-                              {% if author.author_subject_a %}
-                                  <option value="{{ author.author_subject_a|escape }}">{{ author.author_subject_a|escape }}</option>
-                              {% endif %}
-                              {% if author.author_subject_c %}
-                                  <option value="{{ author.author_subject_c|escape }}">{{ author.author_subject_c|escape }}</option>
-                              {% endif %}
-                              {% if not author.author_subject_a and not author.author_subject_c %}
-                                  <option value="" class="no-subjects" disabled>No subjects available for this author.</option>
-                              {% endif %}
+                              
                         </select>
                         <div id="subjectError" class="error-message">Please select a valid subject from your available options.</div>
-                        {% if not author_subjects %}
-                            <small class="text-muted">No subjects configured for this author. Consider updating your profile.</small>
-                        {% endif %}
+                        
                     </div>
                     <!-- Quiz Description -->
                     <div class="mb-3">
@@ -517,6 +507,59 @@
                         <textarea class="form-control" id="quizDescription" name="quiz_description" rows="4" placeholder="Provide a brief description of the quiz..."></textarea>
                         <div id="descriptionError" class="error-message">Description cannot exceed 500 characters (or adjust based on TEXT field limits).</div>
                     </div>
+                    <!-- Quiz number of questions -->
+                    <div class="mb-3">
+                        <label for="quizNumberOfQuestions" class="form-label">Number of Questions</label>
+                        <input type="text" class="form-control" id="quizNumberOfQuestions" name="quizNumberOfQuestions" placeholder="How many questions will be there?">
+                        <small id="quizNumberOfQuestionsError" class="text-muted">It should be an integer</small>
+                    </div>
+                    
+                    <!-- Quiz mark per questions -->
+                    <div class="mb-3">
+                        <label for="quizMarksPerQuestion" class="form-label">Number of Questions</label>
+                        <input type="text" class="form-control" id="quizMarksPerQuestion" name="quizMarksPerQuestion" placeholder="Mark per question">
+                        <small id="quizMarksPerQuestionError" class="text-muted"></small>
+
+                    </div>
+
+                    <!-- Quiz total marks -->
+                    <div class="mb-3">
+                        <label for="quizTotalMarks" class="form-label">Number of Questions</label>
+                        <input type="text" class="form-control" id="quizTotalMarks" name="quizTotalMarks" placeholder="Total Marks">
+                        <small id="quizTotalMarksError" class="text-muted">It will be auto calculated</small>
+                    </div>
+                    
+                  <!-- Quiz status 1 (Read-Only) -->
+                  <div class="mb-3">
+                    <label for="quizStatus1" class="form-label">Quiz status 1</label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="quizStatus1" 
+                        name="quizStatus1" 
+                        placeholder="Total Marks" 
+                        readonly 
+                        aria-readonly="true"
+                        value="Inactive"  
+                    >
+                    <small class="text-muted">It will be auto-calculated based on added questions.</small>  <!-- Repurposed as note; always visible -->
+                  </div>
+
+                  <!-- Quiz status 2 (Read-Only) -->
+                  <div class="mb-3">
+                    <label for="quizStatus2" class="form-label">Quiz status 2</label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="quizStatus2" 
+                        name="quizStatus2" 
+                        placeholder="Total Marks" 
+                        readonly 
+                        aria-readonly="true"
+                        value="Incomplete"  
+                    >
+                    <small class="text-muted">It will be auto-calculated based on added questions.</small>  <!-- Repurposed as note; always visible -->
+                  </div>
                     <!-- Note: author_id, created_date, total_questions, total_participants, average_rating are handled server-side or auto-generated -->
                     <div class="alert alert-info">
                         <small><strong>Note:</strong> Author, creation date, question count, participants, and rating will be set automatically upon creation.</small>
@@ -526,7 +569,7 @@
             <!-- Modal Footer -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" form="quizForm" class="btn btn-primary">Create Quiz</button>
+                <button type="submit" form="quizForm" class="btn btn-primary" id="quizCreateSubmitButton">Create Quiz</button>
             </div>
         </div>
     </div>
@@ -540,6 +583,7 @@
 
 
   <script src="{% static 'home/js/edit_profile_author.js' %}"></script>
+  <script src="{% static 'home/js/author_subjects.js' %}"></script>
 
    <script src="{% static 'home/js/bootstrap.bundle.min.js' %}"></script>
   <script>

@@ -15,6 +15,8 @@ urlpatterns = [
     # Author views
     path('author-dashboard/', author_dashboard, name='author_dashboard'),
     path('update_author_profile/', update_author_profile, name='update_author_profile'),
+    path('author_subjects_api/', author_subjects_api, name='author_subjects_api'),
+
     
     # Participant views
     path('participant-dashboard/', participant_dashboard, name='participant_dashboard'),
